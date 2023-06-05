@@ -24,9 +24,10 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('download/<int:image_id>', views.download, name='download'),
     path('success/', views.success, name='success'),
-    path('login/', views.login, name='login'),
+    path('login/', views.user_login, name='login'),
     path('authenticate/', views.authenticate, name='authenticate'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    
     path('admin/', admin.site.urls),
 ]
 

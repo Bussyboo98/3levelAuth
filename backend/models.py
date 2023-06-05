@@ -13,6 +13,8 @@ class Image(models.Model):
     def __str__(self):
         return self.name
     
+    verbose_name = 'Us'
+    
     def imga_get_absolute_url(self):
        if self.profile:
             return self.profile.url

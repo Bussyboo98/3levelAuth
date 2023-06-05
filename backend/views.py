@@ -6,6 +6,15 @@ from io import BytesIO
 import base64
 from django.contrib import messages
 
+
+
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 def index(request):
     if request.method == 'POST':
         uname = request.POST.get("user_name")
@@ -40,28 +49,31 @@ def success(request):
     passinp = request.POST.get("xy")
     tolerance = request.POST.get("tol")
     user = UserInfo(
-        umail='siva@gmail.com',
+        umail='umail',
         uspass=passinp
     )
     user.save()
     return render(request, "success.html", {'msg': "Account created"})
 
 
-def login(request):
+def user_login(request):
     if request.method == 'POST':
         dummy = request.POST.get("ur_email")
-        usmail = dummy
-        userImg = Image.objects.filter(umail=dummy).first()
-        return render(request, "a.html", {'imga': userImg})
+        dummy_pass = request.POST.get("ur_pass")
+        userImg = Image.objects.filter(umail=dummy, password=dummy_pass).first()
+        if userImg:
+            # User exists, allow login
+            return render(request, "a.html", {'imga': userImg})
+        else:
+            # User does not exist, display an error message
+            messages.error(request, 'User does not exist! or Username and Password do not match')
+            return redirect('login')
     else:
-        messages.error(request, 'User doesn\'t exist!')
-        return redirect('login')
-    return render(request, "login.html")
-
+        return render(request, "login.html")
 
 def authenticate(request):
     ct = 0
-    reqUser = UserInfo.objects.filter(umail='siva@gmail.com').first()
+    reqUser = UserInfo.objects.filter(umail='emmytunmy@2233gmail.com').first()
     passdata = reqUser.uspass
     coordinates = passdata.split()
     print(coordinates)
